@@ -17,12 +17,17 @@ func NewRec(req *http.Request, handler http.HandlerFunc) *httptest.ResponseRecor
 }
 
 func TestMainHandlerWhenOk(t *testing.T) {
+	expectedCountBody := 2
+
 	req := httptest.NewRequest(http.MethodGet, "/cafe?count=2&city=moscow", nil)
 
 	responseRecorder := NewRec(req, mainHandle)
 
+	countBody := strings.Split(responseRecorder.Body.String(), ",")
+
 	assert.Equal(t, responseRecorder.Code, http.StatusOK)
-	assert.NotEmpty(t, responseRecorder.Body)
+	assert.Len(t, countBody, expectedCountBody)
+
 }
 
 func TestMainHandlerWhenWrongCity(t *testing.T) {
